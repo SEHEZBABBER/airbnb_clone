@@ -3,15 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>All Listings | WanderLust</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Include your CSS file here -->
 </head>
 <body>
-    <h1>Wander Lust</h1>
-    <h3>All Listings</h3>
-    <ul>
-    <% for (let obj of data) { %>
-        <li><a href="listings/<%=obj.id%>"><%= obj.title %></a></li>
-    <% } %>
-    </ul>
+    <%- include('header') %>
+    
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>Find Your Next Adventure</h1>
+            <p>Discover unique places to stay around the world</p>
+            <div class="search-box">
+                <input type="text" placeholder="Where are you going?">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="listings-header">
+            <h2>Explore Our Listings</h2>
+            <a href="/listings/new" class="btn btn-primary">Add New Listing</a>
+        </div>
+        
+        <div class="listings-grid">
+            <% for (let obj of data) { %>
+                <div class="card listing-card">
+                    <div class="card-img">
+                        <img src="<%= obj.image || 'https://via.placeholder.com/300x200' %>" alt="<%= obj.title %>">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title"><%= obj.title %></h3>
+                        <p class="card-location">
+                            <i class="fas fa-map-marker-alt"></i> <%= obj.location %>, <%= obj.country %>
+                        </p>
+                        <p class="card-price">$<%= obj.price %> <span>night</span></p>
+                        <a href="/listings/<%= obj.id %>" class="btn btn-outline btn-block">View Details</a>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    
+    <%- include('footer') %>
 </body>
 </html>

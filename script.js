@@ -9,6 +9,7 @@ app.set("views",path.join(__dirname,"views"))
 app.use(methodOverride('_method'));
 app.use(express.json());
 app.use(express.urlencoded(true));
+app.use(express.static(path.join(__dirname, 'public')));
 main().then(()=>{
     console.log("Conenction Succesful");
 }).catch((err)=>{

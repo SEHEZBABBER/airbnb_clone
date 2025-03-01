@@ -1,21 +1,64 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Edit Listing | WanderLust</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Include your CSS file here -->
 </head>
 <body>
-    <form action="/listings?_method=PATCH" method="post">
-        <input type="hidden" name="_id" value="<%=obj.id%>">
-        <input type="text" name="title" value="<%=obj.title%>">
-        <textarea name="description"><%=obj.description%></textarea>
-        <input type="text" name="image" value="<%=obj.image%>">
-        <input type="number" name="price" value="<%=obj.price%>">
-        <input type="text" name="location" value="<%=obj.location%>">
-        <input type="text" name="country" value="<%=obj.country%>">
-        <input type="hidden" name="__v" value = 0>
-        <button>Submit</button>
-    </form>
+    <%- include('header') %>
+    
+    <div class="container">
+        <div class="form-container">
+            <h1>Edit Your Listing</h1>
+            <p>Update the details of your property below</p>
+            
+            <form action="/listings?_method=PATCH" method="post" class="listing-form">
+                <input type="hidden" name="_id" value="<%=obj.id%>">
+                
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" class="form-control" name="title" value="<%=obj.title%>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" class="form-control" name="description" rows="5" required><%=obj.description%></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image">Image URL</label>
+                    <input type="text" id="image" class="form-control" name="image" value="<%=obj.image%>" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Price (per night)</label>
+                        <input type="number" id="price" class="form-control" name="price" value="<%=obj.price%>" min="0" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" class="form-control" name="location" value="<%=obj.location%>" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" class="form-control" name="country" value="<%=obj.country%>" required>
+                    </div>
+                </div>
+                
+                <input type="hidden" name="__v" value="0">
+                
+                <button type="submit" class="btn-submit">Update Listing</button>
+            </form>
+        </div>
+    </div>
+    
+    <%- include('footer') %>
 </body>
 </html>

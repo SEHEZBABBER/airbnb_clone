@@ -3,16 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title><%= obj.title %> | WanderLust</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Include your CSS file here -->
 </head>
 <body>
-    <h1><%=obj.title%></h1>
-    <h3><%=obj.description%></h3>
-    <img src="<%=obj.image%>"/>
-    <h4>Price : <%=obj.price%></h4>
-    <h4>Location : <%=obj.location%></h4>
-    <h4>Country : <%=obj.country%></h4>
-    <button onclick="window.location.href = `/listings/edit/<%=obj.id%>`">Edit</button>
-    <form action="/listings/<%=obj.id%>?_method=DELETE" method= "post"><button>Delete</button></form>
+    <%- include('header') %>
+    
+    <div class="container">
+        <div class="listing-detail">
+            <div class="listing-image">
+                <img src="<%= obj.image %>" alt="<%= obj.title %>">
+            </div>
+            
+            <div class="listing-info">
+                <h1><%= obj.title %></h1>
+                <div class="listing-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span><%= obj.location %>, <%= obj.country %></span>
+                </div>
+                
+                <div class="listing-price">
+                    $<%= obj.price %> <span>night</span>
+                </div>
+                
+                <div class="listing-description">
+                    <h3>About this place</h3>
+                    <p><%= obj.description %></p>
+                </div>
+                
+                <div class="listing-features">
+                    <h3>What this place offers</h3>
+                    <ul class="features-list">
+                        <li><i class="fas fa-wifi"></i> Wifi</li>
+                        <li><i class="fas fa-parking"></i> Free parking</li>
+                        <li><i class="fas fa-swimming-pool"></i> Pool</li>
+                        <li><i class="fas fa-temperature-low"></i> Air conditioning</li>
+                    </ul>
+                </div>
+                
+                <div class="actions">
+                    <a href="/listings/edit/<%= obj.id %>" class="btn btn-edit">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <form action="/listings/<%= obj.id %>?_method=DELETE" method="post">
+                        <button class="btn btn-delete">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="similar-listings">
+            <h2>Similar places you may like</h2>
+            <div class="listings-grid">
+                <!-- You can add similar listings here -->
+            </div>
+        </div>
+    </div>
+    
+    <%- include('footer') %>
 </body>
 </html>
