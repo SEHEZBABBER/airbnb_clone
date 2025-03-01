@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1><%=obj.title%></h1>
+    <h3><%=obj.description%></h3>
+    <img src="<%=obj.image%>"/>
+    <h4>Price : <%=obj.price%></h4>
+    <h4>Location : <%=obj.location%></h4>
+    <h4>Country : <%=obj.country%></h4>
+    <button onclick="window.location.href = `/listings/edit/<%=obj.id%>`">Edit</button>
+    <form action="/listings/<%=obj.id%>?_method=DELETE" method= "post"><button>Delete</button></form>
+</body>
+</html>

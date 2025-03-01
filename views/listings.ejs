@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Wander Lust</h1>
+    <h3>All Listings</h3>
+    <ul>
+    <% for (let obj of data) { %>
+        <li><a href="listings/<%=obj.id%>"><%= obj.title %></a></li>
+    <% } %>
+    </ul>
+</body>
+</html>
