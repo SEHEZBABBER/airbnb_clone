@@ -22,6 +22,12 @@ async function main() {
 app.listen(8080,()=>{
     console.log("listening through port 8080");
 });
+app.use((err,req,res,next)=>{
+    res.send("something went wrong");
+})
+app.get('/listings/new',(req,res)=>{
+    res.render("add");
+})
 app.get('/',(req,res)=>{
     res.send("home root working");
 });
@@ -29,6 +35,12 @@ app.get('/listings',async(req,res)=>{
     const data = await list.find();
     res.render("listings",{data});
 });
+app.post('/listings',async(req,res)=>{
+    let obj = req.body;
+    console.log(obj);
+    await list.insertOne(obj);
+    res.redirect('/listings');
+})
 app.get('/listings/edit/:id',async(req,res)=>{
     let {id} = req.params;
     let obj = await list.find({_id:id});
@@ -38,7 +50,7 @@ app.patch('/listings', async (req, res) => {
     try {
         let obj = req.body;
         delete obj.__v;
-        let result = await list.updateOne({ _id: obj._id }, { $set: obj });
+        await list.updateOne({ _id: obj._id }, { $set: obj });
         res.redirect(`/listings/${obj._id}`);
     } catch (error) {
         console.error("Update Error:", error);
