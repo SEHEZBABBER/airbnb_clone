@@ -9,7 +9,7 @@ const ExpressError = require('./utils/expressError.js');
 const {listingSchema} = require('./Schema.js');
 const {review_Schema} = require('./Schema.js');
 const Joi = require('joi');
-const {reviewSchema} = require('./models/reviews.js');
+const {Review} = require('./models/reviews.js');
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"))
 app.use(methodOverride('_method'));
@@ -40,7 +40,6 @@ const validateListing = (req,res,next) => {
 const validateReview = (req,res,next) => {
     let {error} = review_Schema.validate(req.body);
     if(error){
-        console.log(error);
         throw new ExpressError(401,"Missing arguments while adding data");
     }
     else{
@@ -81,22 +80,30 @@ app.patch('/listings', validateListing ,wrapAsync(async (req, res) => {
 // for deleting a listing
 app.delete('/listings/:id',wrapAsync(async(req,res)=>{
     let {id} = req.params;
-    await list.deleteOne({_id:id});
+    await list.findOneAndDelete({_id:id});
     res.redirect('/listings');
 }));
 // for viewing indvidual properties
 app.get('/listings/:id',wrapAsync(async(req,res)=>{
     let {id} = req.params;
-    let obj = await list.find({_id:id});
+    let obj = await list.find({_id:id}).populate("reviews");
     res.render("prop_view",{obj : obj[0]});
 }));
 app.post('/listings/:id/review',validateReview,wrapAsync(async(req,res)=>{
     let {id} = req.params;
     let listing = await list.findById(id);
-    let {reviewSchema} = req.body;
-    let newReview = await Review.create(reviewSchema);
+    let {review} = req.body;
+    console.log(Review);
+    let newReview = await Review.create(review);
     listing.reviews.push(newReview._id);
     await listing.save();
+    res.redirect(`/listings/${id}`);
+}));
+app.delete('/listings/:id/review/:review_id',wrapAsync(async(req,res)=>{
+    let {id,review_id} = req.params;
+    let listing = await list.findById(id);
+    listing.reviews = listing.reviews.filter((review)=>review.toString() !== review_id.toString());
+    await list.updateOne({_id:id},{$set: {reviews : listing.reviews}});
     res.redirect(`/listings/${id}`);
 }));
 app.use('*',(req,res,next)=>{
@@ -105,5 +112,5 @@ app.use('*',(req,res,next)=>{
 app.use((err,req,res,next)=>{
     let {statusCode = 500,message = "Something went Wrong!"} = err;
     res.status(statusCode)
-    res.render("error",{message});
+    res.render("error",{message,err});
 });
