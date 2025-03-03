@@ -6,8 +6,10 @@ const path = require('path');
 const methodOverride = require('method-override');
 const wrapAsync = require('./utils/wrapAsync.js');
 const ExpressError = require('./utils/expressError.js');
-const listingSchema = require('./Schema.js');
+const {listingSchema} = require('./Schema.js');
+const {review_Schema} = require('./Schema.js');
 const Joi = require('joi');
+const {reviewSchema} = require('./models/reviews.js');
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"))
 app.use(methodOverride('_method'));
@@ -30,6 +32,16 @@ const validateListing = (req,res,next) => {
     let {error} = listingSchema.validate(req.body);
     if(error){
         throw new ExpressError(401,"Missing argumnets while adding data");
+    }
+    else{
+        next();
+    }
+}
+const validateReview = (req,res,next) => {
+    let {error} = review_Schema.validate(req.body);
+    if(error){
+        console.log(error);
+        throw new ExpressError(401,"Missing arguments while adding data");
     }
     else{
         next();
@@ -77,6 +89,15 @@ app.get('/listings/:id',wrapAsync(async(req,res)=>{
     let {id} = req.params;
     let obj = await list.find({_id:id});
     res.render("prop_view",{obj : obj[0]});
+}));
+app.post('/listings/:id/review',validateReview,wrapAsync(async(req,res)=>{
+    let {id} = req.params;
+    let listing = await list.findById(id);
+    let {reviewSchema} = req.body;
+    let newReview = await Review.create(reviewSchema);
+    listing.reviews.push(newReview._id);
+    await listing.save();
+    res.redirect(`/listings/${id}`);
 }));
 app.use('*',(req,res,next)=>{
     next(new ExpressError(404,"Page not Found!"));

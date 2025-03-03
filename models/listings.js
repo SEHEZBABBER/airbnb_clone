@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = require('../Schema');
 let listingScheam = new mongoose.Schema({
     title : {
         type : String,
@@ -12,7 +13,13 @@ let listingScheam = new mongoose.Schema({
     },
     price: Number,
     location : String,
-    country : String
+    country : String,
+    reviews : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "Review",
+        }
+    ]
 });
 const List = mongoose.model("List",listingScheam);
 module.exports = List;

@@ -23,21 +23,21 @@
                     <label for="title">Title</label>
                     <input type="text" id="title" class="form-control" name="title" value="<%=obj.title%>" required>
                     <div class="valid-feedback">Looks Good!</div>
-                    <div class="invalid-feedback">Nah Nah Not Good! Price must be greater than 0.</div>
+                    <div class="invalid-feedback">Nah Nah Not Good</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="description">Description</label>
                     <textarea id="description" class="form-control" name="description" rows="5" required><%=obj.description%></textarea>
                     <div class="valid-feedback">Looks Good!</div>
-                    <div class="invalid-feedback">Nah Nah Not Good! Price must be greater than 0.</div>
+                    <div class="invalid-feedback">Nah Nah Not Good!</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="image">Image URL</label>
                     <input type="text" id="image" class="form-control" name="image" value="<%=obj.image%>" required>
                     <div class="valid-feedback">Looks Good!</div>
-                    <div class="invalid-feedback">Nah Nah Not Good! Price must be greater than 0.</div>
+                    <div class="invalid-feedback">Nah Nah Not Good!</div>
                 </div>
                 
                 <div class="form-row">
@@ -45,7 +45,7 @@
                         <label for="price">Price (per night)</label>
                         <input type="number" id="price" class="form-control" name="price" value="<%=obj.price%>" min="1" required>
                         <div class="valid-feedback">Looks Good!</div>
-                        <div class="invalid-feedback">Nah Nah Not Good! Price must be greater than 0.</div>
+                        <div class="invalid-feedback">Nah Nah Not Good!</div>
                     </div>
                 </div>
                 
@@ -54,18 +54,17 @@
                         <label for="location">Location</label>
                         <input type="text" id="location" class="form-control" name="location" value="<%=obj.location%>" required>
                         <div class="valid-feedback">Looks Good!</div>
-                        <div class="invalid-feedback">Nah Nah Not Good! Price must be greater than 0.</div>
+                        <div class="invalid-feedback">Nah Nah Not Good! </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="country">Country</label>
                         <input type="text" id="country" class="form-control" name="country" value="<%=obj.country%>" required>
                         <div class="valid-feedback">Looks Good!</div>
-                        <div class="invalid-feedback">Nah Nah Not Good! Price must be greater than 0.</div>
+                        <div class="invalid-feedback">Nah Nah Not Good!</div>
                     </div>
                 </div>
                 
-                <input type="hidden" name="__v" value="0">
                 
                 <button type="submit" class="btn-submit">Update Listing</button>
             </form>

@@ -5,66 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= obj.title %> | WanderLust</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css"> <!-- Your custom styles -->
 
-    <!-- Include your CSS file here -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <%- include('header') %>
-    
-    <div class="container">
-        <div class="listing-detail">
-            <div class="listing-image">
-                <img src="<%= obj.image %>" alt="<%= obj.title %>">
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="listing-image">
+                    <img src="<%= obj.image %>" class="img-fluid rounded shadow" alt="<%= obj.title %>">
+                </div>
             </div>
             
-            <div class="listing-info">
-                <h1><%= obj.title %></h1>
-                <div class="listing-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span><%= obj.location %>, <%= obj.country %></span>
-                </div>
-                
-                <div class="listing-price">
-                    $<%= obj.price %> <span>night</span>
-                </div>
-                
-                <div class="listing-description">
-                    <h3>About this place</h3>
-                    <p><%= obj.description %></p>
-                </div>
-                
-                <div class="listing-features">
-                    <h3>What this place offers</h3>
-                    <ul class="features-list">
-                        <li><i class="fas fa-wifi"></i> Wifi</li>
-                        <li><i class="fas fa-parking"></i> Free parking</li>
-                        <li><i class="fas fa-swimming-pool"></i> Pool</li>
-                        <li><i class="fas fa-temperature-low"></i> Air conditioning</li>
-                    </ul>
-                </div>
-                
-                <div class="actions">
-                    <a href="/listings/edit/<%= obj.id %>" class="btn btn-edit">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <form action="/listings/<%= obj.id %>?_method=DELETE" method="post">
-                        <button class="btn btn-delete">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </form>
+            <div class="col-md-6">
+                <div class="listing-info">
+                    <h1 class="fw-bold"><%= obj.title %></h1>
+                    <div class="listing-location text-muted">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span><%= obj.location %>, <%= obj.country %></span>
+                    </div>
+                    
+                    <div class="listing-price text-success fs-4 mt-3">
+                        $<%= obj.price %> <span class="fs-6 text-muted">/ night</span>
+                    </div>
+                    
+                    <div class="listing-description mt-4">
+                        <h3>About this place</h3>
+                        <p><%= obj.description %></p>
+                    </div>
+                    
+                    <div class="listing-features mt-4">
+                        <h3>What this place offers</h3>
+                        <ul class="list-group">
+                            <li class="list-group-item"><i class="fas fa-wifi me-2"></i> Wifi</li>
+                            <li class="list-group-item"><i class="fas fa-parking me-2"></i> Free parking</li>
+                            <li class="list-group-item"><i class="fas fa-swimming-pool me-2"></i> Pool</li>
+                            <li class="list-group-item"><i class="fas fa-temperature-low me-2"></i> Air conditioning</li>
+                        </ul>
+                    </div>
+
+                    <div class="actions mt-4">
+                        <a href="/listings/edit/<%= obj.id %>" class="btn btn-warning me-2">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form action="/listings/<%= obj.id %>?_method=DELETE" method="post" class="d-inline">
+                            <button class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="similar-listings">
-            <h2>Similar places you may like</h2>
-            <div class="listings-grid">
-                <!-- You can add similar listings here -->
-            </div>
+
+        <!-- Review Form -->
+        <div class="mt-5">
+            <form action="http://localhost:8080/listings/<%=obj.id%>/review" class="p-4 border rounded shadow bg-light needs-validation" novalidate method="post">
+                <h2 class="text-center mb-3">Leave a Rating</h2>
+
+                <!-- Rating Slider -->
+                <div class="mb-3">
+                    <label for="rating_slidebar" class="form-label">
+                        Enter Ratings: <span id="rating_value" class="fw-bold text-primary">3</span>
+                    </label>
+                    <input type="range" class="form-range" name="review[rating]" id="rating_slidebar" min="1" max="5" step="1" value="3">
+                    <div class="valid-feedback">Looks Good!</div>
+                    <div class="invalid-feedback">Not Good!</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Enter Comment</label>
+                    <textarea class="form-control" name="review[comment]" id="comment" rows="3" placeholder="Enter Your Comment Here" ></textarea>
+                    <div class="valid-feedback">Looks Good!</div>
+                    <div class="invalid-feedback">Not Good!</div>
+                </div>
+                <button class="btn btn-primary w-100">Submit</button>
+            </form>
         </div>
     </div>
-    
+
     <%- include('footer') %>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript to Update Rating Value -->
+    <script>
+        // Select slider and rating value display
+        const ratingSlider = document.getElementById('rating_slidebar');
+        const ratingValue = document.getElementById('rating_value');
+
+        // Update the displayed rating when slider moves
+        ratingSlider.addEventListener('input', function() {
+            ratingValue.textContent = this.value;
+        });
+    </script>
+    <script src="/js/validate.js"></script>
 </body>
 </html>
