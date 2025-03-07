@@ -10,6 +10,8 @@ const {listingSchema} = require('./Schema.js');
 const {review_Schema} = require('./Schema.js');
 const Joi = require('joi');
 const {Review} = require('./models/reviews.js');
+const listings = require("./routes/listing.js");
+const reviews = require("./routes/reviews.js");
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"))
 app.use(methodOverride('_method'));
@@ -28,84 +30,11 @@ async function main() {
 app.listen(8080,()=>{
     console.log("listening through port 8080");
 });
-const validateListing = (req,res,next) => {
-    let {error} = listingSchema.validate(req.body);
-    if(error){
-        throw new ExpressError(401,"Missing argumnets while adding data");
-    }
-    else{
-        next();
-    }
-}
-const validateReview = (req,res,next) => {
-    let {error} = review_Schema.validate(req.body);
-    if(error){
-        throw new ExpressError(401,"Missing arguments while adding data");
-    }
-    else{
-        next();
-    }
-}
-app.get('/listings/new',(req,res)=>{
-    res.render("add");
-})
-// home root
-app.get('/',(req,res)=>{
-    res.send("home root working");
-});
-// for viewing all the listeings
-app.get('/listings',wrapAsync(async(req,res)=>{
-    const data = await list.find();
-    res.render("listings",{data});
-}));
-// for adding a new listing
-app.post('/listings',validateListing,wrapAsync(async(req,res)=>{
-    let obj = req.body;
-    await list.insertOne(obj);
-    res.redirect('/listings');
-}));
-// for opening the form of editing
-app.get('/listings/edit/:id',wrapAsync(async(req,res)=>{
-    let {id} = req.params;
-    let obj = await list.find({_id:id});
-    res.render("edit",{obj : obj[0]});
-}));
-// for editing the given listing
-app.patch('/listings', validateListing ,wrapAsync(async (req, res) => {
-    let obj = req.body;
-    delete obj.__v;
-    await list.updateOne({ _id: obj._id }, { $set: obj });
-    res.redirect(`/listings/${obj._id}`);
-}));
+
+app.use('/listings',listings);
+app.use('/listings/:id',reviews);
 // for deleting a listing
-app.delete('/listings/:id',wrapAsync(async(req,res)=>{
-    let {id} = req.params;
-    await list.findOneAndDelete({_id:id});
-    res.redirect('/listings');
-}));
-// for viewing indvidual properties
-app.get('/listings/:id',wrapAsync(async(req,res)=>{
-    let {id} = req.params;
-    let obj = await list.find({_id:id}).populate("reviews");
-    res.render("prop_view",{obj : obj[0]});
-}));
-app.post('/listings/:id/review',validateReview,wrapAsync(async(req,res)=>{
-    let {id} = req.params;
-    let listing = await list.findById(id);
-    let {review} = req.body;
-    console.log(Review);
-    let newReview = await Review.create(review);
-    listing.reviews.push(newReview._id);
-    await listing.save();
-    res.redirect(`/listings/${id}`);
-}));
-app.delete('/listings/:id/review/:review_id',wrapAsync(async(req,res)=>{
-    let {id,review_id} = req.params;
-    let listing = await list.findById(id);
-    listing.reviews = listing.reviews.filter((review)=>review.toString() !== review_id.toString());
-    await list.updateOne({_id:id},{$set: {reviews : listing.reviews}});
-    res.redirect(`/listings/${id}`);
-}));
+
 app.use('*',(req,res,next)=>{
     next(new ExpressError(404,"Page not Found!"));
 })
