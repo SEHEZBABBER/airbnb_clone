@@ -20,11 +20,6 @@ const validateReview = (req,res,next) => {
         next();
     }
 }
-router.delete('/',wrapAsync(async(req,res)=>{
-    let {id} = req.params;
-    await list.findOneAndDelete({_id:id});
-    res.redirect('/listings');
-}));
 // for viewing indvidual properties
 router.get('/',wrapAsync(async(req,res)=>{
     let {id} = req.params;
@@ -39,13 +34,18 @@ router.post('/review',validateReview,wrapAsync(async(req,res)=>{
     let newReview = await Review.create(review);
     listing.reviews.push(newReview._id);
     await listing.save();
+    req.flash("success","review added successfully");
     res.redirect(`/listings/${id}`);
 }));
 router.delete('/review/:review_id',wrapAsync(async(req,res)=>{
     let {id,review_id} = req.params;
     let listing = await list.findById(id);
-    listing.reviews = listing.reviews.filter((review)=>review.toString() !== review_id.toString());
+    if(!listing)req.flash("error","review not found");
+    let a = listing.reviews.filter((review)=>review.toString() !== review_id.toString());
+    if(listing.reviews === a)req.flash("error","review not found");
+    else listing.reviews = a;
     await list.updateOne({_id:id},{$set: {reviews : listing.reviews}});
+    req.flash("success","review deleted succesully");
     res.redirect(`/listings/${id}`);
 }));
 module.exports = router;

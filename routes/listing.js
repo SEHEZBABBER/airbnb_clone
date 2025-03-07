@@ -33,20 +33,29 @@ router.get('/',wrapAsync(async(req,res)=>{
 router.post('/',validateListing,wrapAsync(async(req,res)=>{
     let obj = req.body;
     await list.insertOne(obj);
+    req.flash("success","Data Saved Succesfully");
     res.redirect('/listings');
 }));
 // for opening the form of editing
 router.get('/edit/:id',wrapAsync(async(req,res)=>{
     let {id} = req.params;
-    let obj = await list.find({_id:id});
-    res.render("edit",{obj : obj[0]});
+    let obj = await list.findOne({_id:id});
+    if(!obj)req.flash("error","Could Not find the Listing taht you're Lokking For");
+    res.render("edit",{obj});
 }));
 // for editing the given listing
 router.patch('/', validateListing ,wrapAsync(async (req, res) => {
     let obj = req.body;
     delete obj.__v;
     await list.updateOne({ _id: obj._id }, { $set: obj });
+    req.flash("success","Data edited Successfully");
     res.redirect(`/listings/${obj._id}`);
+}));
+router.delete('/:id',wrapAsync(async(req,res)=>{
+    let {id} = req.params;
+    await list.findOneAndDelete({_id:id});
+    req.flash("success","Data Deleted Successfully");
+    res.redirect('/listings');
 }));
 
 module.exports = router;

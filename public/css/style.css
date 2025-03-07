@@ -41,6 +41,33 @@
     top: 0;
     z-index: 100;
   }
+  .flash-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1050; /* Ensures it appears above other elements */
+    width: auto;
+    max-width: 80%;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+}
+.custom-range {
+  width: 60%;
+  accent-color: #007bff; /* Bootstrap primary blue */
+  transition: 0.3s ease-in-out;
+}
+
+.custom-range:hover {
+  accent-color: #0056b3; /* Darker blue on hover */
+}
+
+#rating_value {
+  transition: all 0.3s ease-in-out;
+}
   
   .nav-container {
     max-width: 1200px;
