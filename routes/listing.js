@@ -1,16 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const app = express();
-const mongoose = require('mongoose');
 const list = require('../models/listings.js');
-const path = require('path');
-const methodOverride = require('method-override');
 const wrapAsync = require('../utils/wrapAsync.js');
 const ExpressError = require('../utils/expressError.js');
 const {listingSchema} = require('../Schema.js');
-const {review_Schema} = require('../Schema.js');
-const Joi = require('joi');
-const {Review} = require('../models/reviews.js');
 const validateListing = (req,res,next) => {
     let {error} = listingSchema.validate(req.body);
     if(error){

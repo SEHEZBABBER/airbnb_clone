@@ -1,0 +1,41 @@
+mogoose commands used till now are : 
+1.save() already disccussed
+2.insertMany() initalise the database
+3.insertOne() for adding a new listing to the database from the post request
+4.find() we are using this to find the obj that we have to pass into edit.ejs from _id also used ot get the obj to view it in detail in prop_view
+5.updateOne() to update the obj from edit.ejs in patch route
+6.deleteOne() to delete the selected obj from database
+
+
+1st commit : we made a basic schema for the listings we have our basic code that is requried for connecting to mongoose then we go to a folder called as models there we will be defining our first Schema things to do here while defining our Scheam are : 
+    1.install and require mongoose
+    2.define it let listingSchema = new mongoose.Schema({}) 
+    3. then we save it using const Listing = mongoose.Schema("Listing",listingSchema);
+    4. and then to export it we use module.exports = Listing;
+    5. after that inorder to save the data in the database we need to use command .save() 
+    6. like this let sample = new ListingSchema({}); and then sample.save();
+    7. offcourse you need to require the schema mentioned
+
+2nd commit : we made a folder named as init this is being used to initalise some predefined data into our database here we are using insertMany() function of mongoose you have to pass a array of objects here . then we added some basic things of ejs into our script.js like app.set() etc. and app.use() for method_override and app.use() for handling req.body data 
+Then we have our paths starting up here 
+1.listings : 
+    1.get requrest : this is being used here to showcase all the data in database
+    2.patch request : this is a request from edit.ejs page to edit a database schema
+2./listings/edit/:id : this is a request to open the edit page
+3./listings/:id : this is a delete request used to delete a listing on the page 
+also we have out views ready to the basic level
+
+3rd commit : we used claude to style the document 
+
+4th commit : added a path for adding a new listings first there is a get request on /listing/new and then there is a post request back on listings to add it to the database 
+used bootstarp validation for client side validation in form
+
+5th commit : started doing server side validation useing a package called as Joi first we defined our Schema in Schema.js as a Joi.object() see syntax of it from documentation also made 2 classes wrapAsync and ExpressError for handling the error is error.ejs instead of stopping the server . and then we made a function of validateListings used a default method .validate() for it . this validation is done according to Joi object that we made and it is passed as a middleware fucntion if this function will call next then only we will go to our request if it throws a error then we will be redirected to error.ejs 
+
+6th commit : we made a new Schema for reviews in both models folder as well as in our Schema.js for validation using Joi object
+
+7th commit : we used post method of mongoose to triiger the deletion of all the reviews inside a particular listing if that particular listing is deleted also see how we are handling joins in this schema
+
+8th commit : used express.router()
+
+9th commit : used req.flash messages 
