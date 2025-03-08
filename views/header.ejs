@@ -23,8 +23,13 @@
             </ul>
           </nav>
           <div class="auth-buttons">
-            <a href="/login" class="btn btn-outline">Login</a>
-            <a href="/signup" class="btn btn-primary">Sign Up</a>
+            <%if(isuservalid === undefined) { %>
+              <a href="/login" class="btn btn-outline">Login</a>
+              <a href="/signup" class="btn btn-primary">Sign Up</a>
+            <% } %>
+            <% if(isuservalid !== undefined) { %>
+              <a href="/logout" class="btn btn-primary">Logout</a>
+            <% } %>
           </div>
         </div>
       </header>  
