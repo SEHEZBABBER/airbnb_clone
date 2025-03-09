@@ -23,6 +23,10 @@ const validateReview = (req,res,next) => {
 }
 // for viewing indvidual properties
 router.post('/review',validateReview,save_url,isLoggedin,wrapAsync(async(req,res)=>{
+    let review_check = await Review.findOne({author:req.user._id});
+    if(review_check){
+        throw new ExpressError(401,"You have already reviews this property cant do it again");
+    }
     let {id} = req.params;
     let listing = await list.findById(id);
     let {review} = req.body;

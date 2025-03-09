@@ -90,7 +90,7 @@
     </div>
 
     <!-- Review Form -->
-    <% if (!user_id || obj.owner._id != user_id) { %>
+    <% if (user_id && obj.owner._id != user_id) { %>
     <div class="container mt-5">
       <form
         action="/listings/<%= obj.id %>/review"
