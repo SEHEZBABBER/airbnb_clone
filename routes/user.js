@@ -44,7 +44,7 @@ router.get('/login',(req,res)=>{
 router.post('/login',save_url,Passport.authenticate("local", {
     failureRedirect : '/login',
     failureFlash : true,
-}),async(req,res)=>{
+}),async(req,res,next)=>{
     req.flash("success","Login Successul");
     req.session.user_id = req.user._id;
     if(!res.locals.redirect_local_url)res.locals.redirect_local_url = '/listings';

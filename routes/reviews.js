@@ -11,7 +11,7 @@ const {listingSchema} = require('../Schema.js');
 const {review_Schema} = require('../Schema.js');
 const Joi = require('joi');
 const {Review} = require('../models/reviews.js');
-const { isLoggedin } = require('../middleware/middleware.js');
+const { isLoggedin, save_url } = require('../middleware/middleware.js');
 const validateReview = (req,res,next) => {
     let {error} = review_Schema.validate(req.body);
     if(error){
@@ -22,17 +22,18 @@ const validateReview = (req,res,next) => {
     }
 }
 // for viewing indvidual properties
-router.post('/review',validateReview,isLoggedin,wrapAsync(async(req,res)=>{
+router.post('/review',validateReview,save_url,isLoggedin,wrapAsync(async(req,res)=>{
     let {id} = req.params;
     let listing = await list.findById(id);
     let {review} = req.body;
+    review.author = req.user._id;
     let newReview = await Review.create(review);
     listing.reviews.push(newReview._id);
     await listing.save();
     req.flash("success","review added successfully");
     res.redirect(`/listings/${id}`);
 }));
-router.delete('/review/:review_id',wrapAsync(async(req,res)=>{
+router.delete('/review/:review_id',isLoggedin,wrapAsync(async(req,res)=>{
     let {id,review_id} = req.params;
     let listing = await list.findById(id);
     if(!listing)req.flash("error","review not found");

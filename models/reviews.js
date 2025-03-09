@@ -1,5 +1,6 @@
 const { number } = require('joi');
 const mongoose = require('mongoose');
+const {User} = require('./User.js');
 let reviewSchema = mongoose.Schema({
     comment:{
         type:String,
@@ -13,6 +14,10 @@ let reviewSchema = mongoose.Schema({
     createdAt :{
         type : Date,
         default : Date.now(),
+    },
+    author :{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "User",
     }
 });
 const Review = mongoose.model("Review",reviewSchema);

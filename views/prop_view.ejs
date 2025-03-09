@@ -1,133 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= obj.title %> | WanderLust</title>
-    
+
     <!-- FontAwesome & Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/style.css"> 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <%- include('header') %>
-    
+
     <!-- Flash Messages -->
     <div class="container mt-3">
-        <% if (success_msg.length > 0) { %>
-            <div class="alert alert-success alert-dismissible fade show flash-message" role="alert">
-                <strong>Success:</strong> <%= success_msg %>
-            </div>
-        <% } %>
-        
-        <% if (error_msg.length > 0) { %>
-            <div class="alert alert-danger alert-dismissible fade show flash-message" role="alert">
-                <strong>Error:</strong> <%= error_msg %>
-            </div>
-        <% } %>
-    </div>
-    
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-6">
-                <img src="<%= obj.image %>" class="img-fluid rounded shadow" alt="<%= obj.title %>">
-            </div>
-            
-            <div class="col-md-6">
-                <h1 class="fw-bold"><%= obj.title %></h1>
-                <p><strong>Owned By:</strong> <%= obj.owner.username %></p>
-                <p class="text-muted">
-                    <i class="fas fa-map-marker-alt"></i> <%= obj.location %>, <%= obj.country %>
-                </p>
-                <h3 class="text-success">
-                    $<%= obj.price %> <span class="fs-6 text-muted">/ night</span>
-                </h3>
-                <p class="mt-3"><strong>About this place:</strong></p>
-                <p><%= obj.description %></p>
-                
-                <h3 class="mt-4">What this place offers</h3>
-                <ul class="list-group">
-                    <li class="list-group-item"><i class="fas fa-wifi me-2"></i> Wifi</li>
-                    <li class="list-group-item"><i class="fas fa-parking me-2"></i> Free parking</li>
-                    <li class="list-group-item"><i class="fas fa-swimming-pool me-2"></i> Pool</li>
-                    <li class="list-group-item"><i class="fas fa-temperature-low me-2"></i> Air conditioning</li>
-                </ul>
-                <% if(user_id == null || obj.owner._id == user_id) { %>
-                <div class="actions mt-4">
-                    <a href="/listings/edit/<%= obj.id %>" class="btn btn-warning me-2">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <form action="/listings/<%= obj.id %>?_method=DELETE" method="post" class="d-inline">
-                        <button class="btn btn-danger">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </form>
-                </div>
-                <% } %>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Review Form -->
-    <% if(user_id == null || obj.owner._id != user_id) { %>
-    <div class="container mt-5">
-        <form action="/listings/<%= obj.id %>/review" method="post" class="p-4 border rounded shadow bg-light">
-            <h2 class="text-center mb-3">Leave a Rating</h2>
-            <div class="mb-3 text-center">
-                <label for="rating_slidebar" class="form-label"><strong>Enter Rating:</strong> 
-                    <span id="rating_value" class="fw-bold text-primary fs-4">3</span>
-                </label>
-                <input type="range" class="form-range" name="review[rating]" id="rating_slidebar" min="1" max="5" step="1" value="3">
-                <small class="text-secondary">Drag the slider to select your rating</small>
-            </div>
-            <button class="btn btn-primary w-100">Submit</button>
-        </form>
+      <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
+      <div
+        class="alert alert-success alert-dismissible fade show flash-message"
+        role="alert"
+      >
+        <strong>Success:</strong> <%= success_msg %>
+      </div>
+      <% } %> 
+      <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+      <div
+        class="alert alert-danger alert-dismissible fade show flash-message"
+        role="alert"
+      >
+        <strong>Error:</strong> <%= error_msg %>
+      </div>
+      <% } %>
     </div>
 
-    
-    <!-- Reviews Section -->
     <div class="container mt-4">
-        <h2>Reviews</h2>
-        <div class="list-group">
-            <% obj.reviews.forEach(review => { %>
-                <div class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="mb-1"><strong>Comment:</strong> <%= review.comment %></p>
-                        <p class="mb-1"><strong>Rating:</strong> ⭐ <%= review.rating %> / 5</p>
-                        <small class="text-muted">Posted on <%= new Date(review.createdAt).toLocaleDateString() %></small>
-                    </div>
-                    <form action="/listings/<%= obj.id %>/review/<%= review.id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-sm btn-danger">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </form>
-                </div>
-            <% }) %>
+      <div class="row">
+        <div class="col-md-6">
+          <img
+            src="<%= obj.image %>"
+            class="img-fluid rounded shadow"
+            alt="<%= obj.title %>"
+          />
         </div>
+
+        <div class="col-md-6">
+          <h1 class="fw-bold"><%= obj.title %></h1>
+          <p><strong>Owned By:</strong> <%= obj.owner.username %></p>
+          <p class="text-muted">
+            <i class="fas fa-map-marker-alt"></i> <%= obj.location %>, <%= obj.country %>
+          </p>
+          <h3 class="text-success">
+            $<%= obj.price %> <span class="fs-6 text-muted">/ night</span>
+          </h3>
+          <p class="mt-3"><strong>About this place:</strong></p>
+          <p><%= obj.description %></p>
+
+          <h3 class="mt-4">What this place offers</h3>
+          <ul class="list-group">
+            <li class="list-group-item"><i class="fas fa-wifi me-2"></i> Wifi</li>
+            <li class="list-group-item"><i class="fas fa-parking me-2"></i> Free parking</li>
+            <li class="list-group-item"><i class="fas fa-swimming-pool me-2"></i> Pool</li>
+            <li class="list-group-item"><i class="fas fa-temperature-low me-2"></i> Air conditioning</li>
+          </ul>
+
+          <% if (!user_id || obj.owner._id == user_id) { %>
+          <div class="actions mt-4">
+            <a href="/listings/edit/<%= obj.id %>" class="btn btn-warning me-2">
+              <i class="fas fa-edit"></i> Edit
+            </a>
+            <form
+              action="/listings/<%= obj.id %>?_method=DELETE"
+              method="post"
+              class="d-inline"
+            >
+              <button class="btn btn-danger">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </form>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review Form -->
+    <% if (!user_id || obj.owner._id != user_id) { %>
+    <div class="container mt-5">
+      <form
+        action="/listings/<%= obj.id %>/review"
+        method="post"
+        class="p-4 border rounded shadow bg-light"
+      >
+        <h2 class="text-center mb-3">Leave a Rating</h2>
+
+        <!-- Rating Slider -->
+        <div class="mb-3 text-center">
+          <label for="rating_slidebar" class="form-label"
+            ><strong>Enter Rating:</strong>
+            <span id="rating_value" class="fw-bold text-primary fs-4">3</span>
+          </label>
+          <input
+            type="range"
+            class="form-range"
+            name="review[rating]"
+            id="rating_slidebar"
+            min="1"
+            max="5"
+            step="1"
+            value="3"
+          />
+          <small class="text-secondary"
+            >Drag the slider to select your rating</small
+          >
+        </div>
+
+        <!-- Textarea for Review Comment -->
+        <div class="mb-3">
+          <label for="review_comment" class="form-label"
+            ><strong>Write a Review:</strong></label
+          >
+          <textarea
+            class="form-control"
+            id="review_comment"
+            name="review[comment]"
+            rows="4"
+            placeholder="Share your experience..."
+          ></textarea>
+        </div>
+
+        <button class="btn btn-primary w-100">Submit</button>
+      </form>
     </div>
     <% } %>
-    
+
+    <!-- Reviews Section -->
+    <div class="container mt-4">
+      <h2>Reviews</h2>
+<div class="list-group">
+  <% 
+    let userReview = obj.reviews.find(review => review.author._id == user_id);
+    let otherReviews = obj.reviews.filter(review => review.author._id != user_id);
+  %>
+
+  <% if (userReview) { %>
+    <!-- Logged-in user's review at the top -->
+    <div class="list-group-item d-flex justify-content-between align-items-center border border-primary">
+      <div>
+        <p class="mb-1"><strong>Your Review:</strong> <%= userReview.comment %></p>
+        <p class="mb-1"><strong>Owner:</strong> <%= userReview.author.username %></p>
+        <p class="mb-1">
+          <strong>Rating:</strong> ⭐ <%= userReview.rating %> / 5
+        </p>
+        <small class="text-muted">Posted on <%= new Date(userReview.createdAt).toLocaleDateString() %></small>
+      </div>
+      <form action="/listings/<%= obj.id %>/review/<%= userReview.id %>?_method=DELETE" method="POST">
+        <button class="btn btn-sm btn-danger">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+      </form>
+    </div>
+  <% } %>
+
+  <!-- Display other reviews below -->
+  <% otherReviews.forEach(review => { %>
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <p class="mb-1"><strong>Comment:</strong> <%= review.comment %></p>
+        <p class="mb-1"><strong>Owner:</strong> <%= review.author.username %></p>
+        <p class="mb-1">
+          <strong>Rating:</strong> ⭐ <%= review.rating %> / 5
+        </p>
+        <small class="text-muted">Posted on <%= new Date(review.createdAt).toLocaleDateString() %></small>
+      </div>
+      <% if (review.author._id == user_id || user_id == obj.owner._id) { %>
+      <form action="/listings/<%= obj.id %>/review/<%= review.id %>?_method=DELETE" method="POST">
+        <button class="btn btn-sm btn-danger">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+      </form>
+      <% } %>
+    </div>
+  <% }) %>
+</div>
+
+    </div>
+
     <%- include('footer') %>
-    
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- JavaScript for Rating Slider -->
     <script>
-        const ratingSlider = document.getElementById('rating_slidebar');
-        const ratingValue = document.getElementById('rating_value');
-        ratingSlider.addEventListener('input', function() {
-            ratingValue.textContent = this.value;
+      const ratingSlider = document.getElementById("rating_slidebar");
+      const ratingValue = document.getElementById("rating_value");
+
+      ratingSlider.addEventListener("input", function () {
+        ratingValue.textContent = this.value;
+      });
+
+      // Auto-hide flash messages
+      setTimeout(() => {
+        document.querySelectorAll(".flash-message").forEach((msg) => {
+          msg.remove();
         });
-        
-        // Auto-hide flash messages
-        setTimeout(() => {
-            document.querySelectorAll('.flash-message').forEach(msg => {
-                msg.remove();
-            });
-        }, 3000);
+      }, 3000);
     </script>
     <script src="/js/validate.js"></script>
-</body>
+  </body>
 </html>

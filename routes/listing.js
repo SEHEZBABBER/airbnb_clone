@@ -6,6 +6,7 @@ const ExpressError = require('../utils/expressError.js');
 const {listingSchema} = require('../Schema.js');
 const {isLoggedin} = require('../middleware/middleware.js');
 const {save_url} = require('../middleware/middleware.js');
+const { Review } = require('../models/reviews.js');
 
 const validateListing = (req,res,next) => {
     let {error} = listingSchema.validate(req.body);
@@ -63,10 +64,20 @@ router.delete('/:id', isLoggedin, wrapAsync(async(req,res)=>{
     req.flash("success","Data Deleted Successfully");
     res.redirect('/listings');
 }));
-router.get('/:id',wrapAsync(async(req,res)=>{
-    let {id} = req.params;
-    let obj = await list.find({_id:id}).populate("reviews").populate("owner");
-    res.locals.user_id = req.session.user_id;
-    res.render("prop_view",{obj : obj[0]});
+router.get('/:id', wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    let obj = await list.findById(id)
+        .populate({ path: "reviews", populate: { path: "author" } })
+        .populate("owner");
+
+    res.locals.user_id = req.session.user_id;  // Store user_id in locals
+
+    // Ensure user_id is defined before querying
+    let my_review = null;
+    if (req.session.user_id) {
+        my_review = await Review.findOne({ author: req.session.user_id });
+    }
+
+    res.render("prop_view", { obj, review: my_review });
 }));
 module.exports = router;
