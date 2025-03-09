@@ -28,12 +28,14 @@ router.post('/signup',wrapAsync(async(req,res,next)=>{
             return next(err);
         }
         else{
+            req.session.user_id = req.user._id;
             res.redirect('/listings');
         }
     });
     }
     catch(e){
         req.flash("error",e.message);
+        res.redirect('/signup');
     }
 }));
 router.get('/login',(req,res)=>{
@@ -44,6 +46,7 @@ router.post('/login',save_url,Passport.authenticate("local", {
     failureFlash : true,
 }),async(req,res)=>{
     req.flash("success","Login Successul");
+    req.session.user_id = req.user._id;
     if(!res.locals.redirect_local_url)res.locals.redirect_local_url = '/listings';
     res.redirect(res.locals.redirect_local_url);
 });

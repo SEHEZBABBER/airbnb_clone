@@ -11,6 +11,7 @@ const {listingSchema} = require('../Schema.js');
 const {review_Schema} = require('../Schema.js');
 const Joi = require('joi');
 const {Review} = require('../models/reviews.js');
+const { isLoggedin } = require('../middleware/middleware.js');
 const validateReview = (req,res,next) => {
     let {error} = review_Schema.validate(req.body);
     if(error){
@@ -21,16 +22,10 @@ const validateReview = (req,res,next) => {
     }
 }
 // for viewing indvidual properties
-router.get('/',wrapAsync(async(req,res)=>{
-    let {id} = req.params;
-    let obj = await list.find({_id:id}).populate("reviews");
-    res.render("prop_view",{obj : obj[0]});
-}));
-router.post('/review',validateReview,wrapAsync(async(req,res)=>{
+router.post('/review',validateReview,isLoggedin,wrapAsync(async(req,res)=>{
     let {id} = req.params;
     let listing = await list.findById(id);
     let {review} = req.body;
-    console.log(Review);
     let newReview = await Review.create(review);
     listing.reviews.push(newReview._id);
     await listing.save();

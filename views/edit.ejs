@@ -16,7 +16,7 @@
             <h1>Edit Your Listing</h1>
             <p>Update the details of your property below</p>
             
-            <form action="/listings?_method=PATCH" method="post" class="listing-form needs-validation" novalidate>
+            <form action="/listings/<%=obj.id%>?_method=PATCH" method="post" class="listing-form needs-validation" novalidate>
                 <input type="hidden" name="_id" value="<%=obj.id%>">
                 
                 <div class="form-group">

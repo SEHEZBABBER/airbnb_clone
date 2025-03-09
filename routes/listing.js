@@ -36,22 +36,37 @@ router.post('/',validateListing,isLoggedin,wrapAsync(async(req,res)=>{
 router.get('/edit/:id',isLoggedin,wrapAsync(async(req,res)=>{
     let {id} = req.params;
     let obj = await list.findOne({_id:id});
+    if(obj.owner._id != req.session.user_id){
+        throw new ExpressError(403,"you are not authroised to edit this page");
+    }
     if(!obj)req.flash("error","Could Not find the Listing taht you're Lokking For");
     res.render("edit",{obj});
 }));
 // for editing the given listing
-router.patch('/', validateListing , isLoggedin,wrapAsync(async (req, res) => {
+router.patch('/:id', validateListing , isLoggedin,wrapAsync(async (req, res,next) => {
     let obj = req.body;
     delete obj.__v;
+    if(obj.owner._id != req.session.user_id){
+        throw new ExpressError(403,"you are not authroised to edit this page");
+    }
     await list.updateOne({ _id: obj._id }, { $set: obj });
     req.flash("success","Data edited Successfully");
     res.redirect(`/listings/${obj._id}`);
 }));
 router.delete('/:id', isLoggedin, wrapAsync(async(req,res)=>{
     let {id} = req.params;
+    let listing = await list.find({_id:id});
+    if(listing.owner._id != req.session.user_id){
+        throw new ExpressError(403,"you are not authroised to edit this page");
+    }
     await list.findOneAndDelete({_id:id});
     req.flash("success","Data Deleted Successfully");
     res.redirect('/listings');
 }));
-
+router.get('/:id',wrapAsync(async(req,res)=>{
+    let {id} = req.params;
+    let obj = await list.find({_id:id}).populate("reviews").populate("owner");
+    res.locals.user_id = req.session.user_id;
+    res.render("prop_view",{obj : obj[0]});
+}));
 module.exports = router;
