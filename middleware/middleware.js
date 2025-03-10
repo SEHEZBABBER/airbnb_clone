@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const {listingSchema} = require('../Schema.js');
+const {review_Schema} = require('../Schema.js');
 const isLoggedin = (req,res,next)=>{
     if(req.isAuthenticated()){
         next();
@@ -29,4 +30,13 @@ const validateListing = (req,res,next) => {
         next();
     }
 }
-module.exports = {isLoggedin,save_url,validateListing};
+const validateReview = (req,res,next) => {
+    let {error} = review_Schema.validate(req.body);
+    if(error){
+        throw new ExpressError(401,"Missing arguments while adding data");
+    }
+    else{
+        next();
+    }
+}
+module.exports = {isLoggedin,save_url,validateListing,validateReview};
