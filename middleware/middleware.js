@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const {listingSchema} = require('../Schema.js');
 const isLoggedin = (req,res,next)=>{
     if(req.isAuthenticated()){
         next();
@@ -19,4 +20,13 @@ const save_url = (req,res,next)=>{
     }
     next();
 };
-module.exports = {isLoggedin,save_url};
+const validateListing = (req,res,next) => {
+    let {error} = listingSchema.validate(req.body);
+    if(error){
+        throw new ExpressError(401,"Missing argumnets while adding data");
+    }
+    else{
+        next();
+    }
+}
+module.exports = {isLoggedin,save_url,validateListing};
