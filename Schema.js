@@ -1,21 +1,30 @@
 const Joi = require('joi');
 
-let listingSchema = Joi.object({
-    _id:Joi.string(),
+const listingSchema = Joi.object({
+    _id: Joi.string(),
     title: Joi.string().required(),
-    description: Joi.string().required(),  // Fixed missing parentheses
-    location: Joi.string().required(),  // Fixed missing parentheses
+    description: Joi.string().required(),
+    location: Joi.string().required(),
     country: Joi.string().required(),
-    price: Joi.number().min(0).required(),  // Order of min and required doesn't matter
-    image: Joi.string().allow("", null)  // This is fine
+    price: Joi.number().min(0).required(),
+    image: Joi.string().allow("", null),
+    owner: Joi.string().required(),  // Owner ID must be provided
 });
-let reviewSchema = Joi.object({
-    review:Joi.object({
-        comment:Joi.string().required(),
-        rating:Joi.number().required().min(1).max(5),
-    }).required()
+
+const reviewSchema = Joi.object({
+    review: Joi.object({
+        comment: Joi.string().required(),
+        rating: Joi.number().min(1).max(5).required(),
+        author: Joi.string().required(),  // Ensure author ID is present
+    }).required(),
+});
+const userSchema = Joi.object({
+    username: Joi.string().min(3).max(30).required(),
+    email: Joi.string().email(),
+    password: Joi.string().min(6).required(),
 });
 module.exports = {
-    listingSchema:listingSchema,
-    review_Schema:reviewSchema,
-}
+    listingSchema,
+    reviewSchema,
+    userSchema,
+};

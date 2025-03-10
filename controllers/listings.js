@@ -10,6 +10,7 @@ module.exports.index = async(req,res)=>{
 }
 module.exports.post_listing = async(req,res)=>{
     let obj = req.body;
+    obj.owner = req.user._id;
     await list.insertOne(obj);
     req.flash("success","Data Saved Succesfully");
     res.redirect('/listings');
@@ -26,7 +27,7 @@ module.exports.open_edit_form = async(req,res)=>{
 module.exports.edit_form = async (req, res,next) => {
     let obj = req.body;
     delete obj.__v;
-    if(obj.owner._id != req.session.user_id){
+    if(obj.owner != req.session.user_id){
         throw new ExpressError(403,"you are not authroised to edit this page");
     }
     await list.updateOne({ _id: obj._id }, { $set: obj });
@@ -35,7 +36,8 @@ module.exports.edit_form = async (req, res,next) => {
 };
 module.exports.delete_list = async(req,res)=>{
     let {id} = req.params;
-    let listing = await list.find({_id:id});
+    let listing = await list.findOne({_id:id});
+    console.log(listing);
     if(listing.owner._id != req.session.user_id){
         throw new ExpressError(403,"you are not authroised to edit this page");
     }

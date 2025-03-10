@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const {listingSchema} = require('../Schema.js');
 const {review_Schema} = require('../Schema.js');
+const {userSchema} = require('../Schema.js');
+const ExpressError = require('../utils/expressError.js');
 const isLoggedin = (req,res,next)=>{
     if(req.isAuthenticated()){
         next();
@@ -39,4 +41,12 @@ const validateReview = (req,res,next) => {
         next();
     }
 }
-module.exports = {isLoggedin,save_url,validateListing,validateReview};
+
+const validateUser = (req,res,next) => {
+    const { error } = userSchema.validate(req.body);
+    if (error) {
+        throw new Error(error.details[0].message);  // Throw meaningful error message
+    }
+    return next();  // Return true if validation passes
+};
+module.exports = {isLoggedin,save_url,validateListing,validateReview,validateUser};
