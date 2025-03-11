@@ -17,7 +17,7 @@
             <h1>Add Your Listing</h1>
             <p>Add the details of your property below</p>
             
-            <form action="/listings" method="post"class="listing-form needs-validation" novalidate>
+            <form action="/listings" method="post"class="listing-form needs-validation" novalidate enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" id="title" class="form-control" name="title" placeholder="Enter Title Here" required>
@@ -32,8 +32,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="image">Image URL</label>
-                    <input type="text" id="image" class="form-control" name="image" placeholder="Paste the url here">
+                    <label for="image">Upload Image</label>
+                    <input type="file" id="image" class="form-control" name="image">
                     <div class="valid-feedback">Looks Good!</div>
                 </div>
                 
