@@ -23,6 +23,7 @@ module.exports.delete_review = async(req,res)=>{
     if(listing.reviews === a)req.flash("error","review not found");
     else listing.reviews = a;
     await list.updateOne({_id:id},{$set: {reviews : listing.reviews}});
+    await Review.deleteOne({_id:review_id});
     req.flash("success","review deleted succesully");
     res.redirect(`/listings/${id}`);
 }
