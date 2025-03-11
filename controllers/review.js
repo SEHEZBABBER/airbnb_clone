@@ -2,14 +2,13 @@ const {Review} = require('../models/reviews.js');
 const list = require('../models/listings');
 const ExpressError = require('../utils/expressError.js');
 module.exports.post_review = async(req,res)=>{
-    let review_check = await Review.findOne({author:req.user._id});
+    let review_check = await Review.findOne({owner:req.user._id});
     if(review_check){
         throw new ExpressError(401,"You have already reviews this property cant do it again");
     }
     let {id} = req.params;
     let listing = await list.findById(id);
-    let {review} = req.body;
-    review.author = req.user._id;
+    let review = req.body;
     let newReview = await Review.create(review);
     listing.reviews.push(newReview._id);
     await listing.save();

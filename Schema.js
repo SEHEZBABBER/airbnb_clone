@@ -12,11 +12,9 @@ const listingSchema = Joi.object({
 });
 
 const reviewSchema = Joi.object({
-    review: Joi.object({
-        comment: Joi.string().required(),
-        rating: Joi.number().min(1).max(5).required(),
-        author: Joi.string().required(),  // Ensure author ID is present
-    }).required(),
+    comment: Joi.string().required(),
+    rating: Joi.number().min(1).max(5).required(),
+    owner: Joi.string().required(),  
 });
 const userSchema = Joi.object({
     username: Joi.string().min(3).max(30).required(),

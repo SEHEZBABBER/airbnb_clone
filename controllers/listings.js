@@ -37,7 +37,6 @@ module.exports.edit_form = async (req, res,next) => {
 module.exports.delete_list = async(req,res)=>{
     let {id} = req.params;
     let listing = await list.findOne({_id:id});
-    console.log(listing);
     if(listing.owner._id != req.session.user_id){
         throw new ExpressError(403,"you are not authroised to edit this page");
     }
@@ -48,7 +47,7 @@ module.exports.delete_list = async(req,res)=>{
 module.exports.view_prop = async (req, res) => {
     let { id } = req.params;
     let obj = await list.findById(id)
-        .populate({ path: "reviews", populate: { path: "author" } })
+        .populate({ path: "reviews", populate: { path: "owner" } })
         .populate("owner");
 
     res.locals.user_id = req.session.user_id;  // Store user_id in locals
@@ -56,7 +55,7 @@ module.exports.view_prop = async (req, res) => {
     // Ensure user_id is defined before querying
     let my_review = null;
     if (req.session.user_id) {
-        my_review = await Review.findOne({ author: req.session.user_id });
+        my_review = await Review.findOne({ owner: req.session.user_id });
     }
 
     res.render("prop_view", { obj, review: my_review });

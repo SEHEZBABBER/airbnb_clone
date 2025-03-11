@@ -1,9 +1,14 @@
 const express = require('express');
 const app = express();
 const {listingSchema} = require('../Schema.js');
-const {review_Schema} = require('../Schema.js');
+const {reviewSchema} = require('../Schema.js');
 const {userSchema} = require('../Schema.js');
 const ExpressError = require('../utils/expressError.js');
+const addowner = (req,res,next) => {
+    if(req.body.price)req.body.price = Number(req.body.price);
+    req.body.owner = String(req.user._id);
+    return next();
+}
 const isLoggedin = (req,res,next)=>{
     if(req.isAuthenticated()){
         next();
@@ -26,14 +31,14 @@ const save_url = (req,res,next)=>{
 const validateListing = (req,res,next) => {
     let {error} = listingSchema.validate(req.body);
     if(error){
-        throw new ExpressError(401,"Missing argumnets while adding data");
+        throw new ExpressError(401,"missing arguments while adding data");
     }
     else{
         next();
     }
 }
 const validateReview = (req,res,next) => {
-    let {error} = review_Schema.validate(req.body);
+    let {error} = reviewSchema.validate(req.body);
     if(error){
         throw new ExpressError(401,"Missing arguments while adding data");
     }
@@ -49,4 +54,4 @@ const validateUser = (req,res,next) => {
     }
     return next();  // Return true if validation passes
 };
-module.exports = {isLoggedin,save_url,validateListing,validateReview,validateUser};
+module.exports = {isLoggedin,save_url,validateListing,validateReview,validateUser , addowner};
