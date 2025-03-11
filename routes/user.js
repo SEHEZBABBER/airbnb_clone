@@ -6,13 +6,13 @@ const {isLoggedin, save_url} = require('../middleware/middleware.js');
 const {validateUser} = require('../middleware/middleware.js');
 const userController = require('../controllers/user.js');
 // for signing up
-router.get('/signup',userController.form_signup);
-// for posting sign up
-router.post('/signup',validateUser,wrapAsync(userController.post_signup));
+router.router('/signup')
+    .get(userController.form_signup)
+    .post('/signup',validateUser,wrapAsync(userController.post_signup));
 // for login form
-router.get('/login',userController.form_login);
-// for posting login form
-router.post('/login',save_url,validateUser,Passport.authenticate("local", {
+router.router('/login')
+    .get('/login',userController.form_login)
+    .post(save_url,validateUser,Passport.authenticate("local", {
     failureRedirect : '/login',
     failureFlash : true,
 }),userController.post_login);
