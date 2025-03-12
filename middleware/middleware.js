@@ -9,6 +9,13 @@ const addowner = (req,res,next) => {
     req.body.owner = String(req.user._id);
     return next();
 }
+const addimage = (req,res,next) => {
+    req.body.image = {
+        path:req.file.filename,
+        URL:req.file.path,
+    }
+    next();
+}
 const isLoggedin = (req,res,next)=>{
     if(req.isAuthenticated()){
         next();
@@ -29,8 +36,10 @@ const save_url = (req,res,next)=>{
     next();
 };
 const validateListing = (req,res,next) => {
+    console.log(req.body);
     let {error} = listingSchema.validate(req.body);
     if(error){
+        console.log(error.details);
         throw new ExpressError(401,"missing arguments while adding data");
     }
     else{
@@ -54,4 +63,4 @@ const validateUser = (req,res,next) => {
     }
     return next();  // Return true if validation passes
 };
-module.exports = {isLoggedin,save_url,validateListing,validateReview,validateUser , addowner};
+module.exports = {isLoggedin,save_url,validateListing,validateReview,validateUser , addowner ,addimage};

@@ -7,7 +7,10 @@ const listingSchema = Joi.object({
     location: Joi.string().required(),
     country: Joi.string().required(),
     price: Joi.number().min(0).required(),
-    image: Joi.string().allow("", null),
+    image: Joi.object({
+        path:Joi.string(),
+        URL:Joi.string(),
+    }),
     owner: Joi.string().required(),  // Owner ID must be provided
 });
 

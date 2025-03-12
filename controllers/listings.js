@@ -10,7 +10,9 @@ module.exports.index = async(req,res)=>{
 }
 module.exports.post_listing = async(req,res)=>{
     let obj = req.body;
-    obj.owner = req.user._id;
+    obj.image.URL = req.file.path;
+    obj.image.path = req.file.filename;
+    console.log(obj);
     await list.insertOne(obj);
     req.flash("success","Data Saved Succesfully");
     res.redirect('/listings');

@@ -9,9 +9,8 @@ let listingSchema = new mongoose.Schema({
     },
     description : String,
     image : {
-        type : String,
-        default : "https://unsplash.com/photos/a-mountain-range-with-snow-7qJhiyd7yjk",
-        set : (V)=> V === ""?"https://unsplash.com/photos/a-mountain-range-with-snow-7qJhiyd7yjk":V,
+        path:String,
+        URL:String,
     },
     price: Number,
     location : String,

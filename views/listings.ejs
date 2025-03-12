@@ -45,7 +45,7 @@
             <% for (let obj of data) { %>
                 <div class="card listing-card">
                     <div class="card-img">
-                        <img src="<%= obj.image || 'https://via.placeholder.com/300x200' %>" alt="<%= obj.title %>">
+                        <img src="<%= obj.image.URL || 'https://via.placeholder.com/300x200' %>" alt="<%= obj.title %>">
                     </div>
                     <div class="card-body">
                         <h3 class="card-title"><%= obj.title %></h3>
