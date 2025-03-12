@@ -29,9 +29,17 @@ module.exports.open_edit_form = async(req,res)=>{
 module.exports.edit_form = async (req, res,next) => {
     let obj = req.body;
     delete obj.__v;
+    // console.log(req.file);
     if(obj.owner != req.session.user_id){
         throw new ExpressError(403,"you are not authroised to edit this page");
     }
+    if(req.file.filename && req.file.path){
+        obj.image = {
+            URL : req.file.path,
+            path : req.file.filename,
+        }
+    }
+    console.log(obj);
     await list.updateOne({ _id: obj._id }, { $set: obj });
     req.flash("success","Data edited Successfully");
     res.redirect(`/listings/${obj._id}`);

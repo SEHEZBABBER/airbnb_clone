@@ -14,16 +14,11 @@ router.get('/new',isLoggedin,listingController.new_route);
 router.route('/')
     .get(wrapAsync(listingController.index))
     .post(isLoggedin,upload.single('image'),addowner,addimage,validateListing,wrapAsync(listingController.post_listing));
-    // .post(upload.single('image'),(req,res)=>{
-    //     console.log(req.body);
-    //     console.log(req.filr);
-    //     res.send(req.file);
-    // });
 // for opening the form of editing
 router.get('/edit/:id',isLoggedin,wrapAsync(listingController.open_edit_form));
 // for editing the given listing
 router.route('/:id')
-    .patch(validateListing , isLoggedin,wrapAsync(listingController.edit_form))
+    .patch(isLoggedin,upload.single('image'),validateListing,wrapAsync(listingController.edit_form))
     .delete(isLoggedin, wrapAsync(listingController.delete_list))
     .get(wrapAsync(listingController.view_prop));
 

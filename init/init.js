@@ -12,9 +12,9 @@ async function main() {
 }
 const initDb = async()=>{
     await list.deleteMany({});
-    console.log(data.data);
     let arr = data.data;
     arr = arr.map((dat)=>({...dat,owner:"67cc52779c9a8010feaa2841"}));
+    console.log(arr);
     await list.insertMany(arr);
     console.log("data saved succesfuly");
 }
