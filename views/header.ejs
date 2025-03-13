@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+      #btn{
+        border: none;
+        background-color: transparent;
+        margin: 0px;
+        opacity: 0.9;
+        padding: 0px;
+      }
+      #btn_contact{
+        border: none;
+        background-color: transparent;
+        margin: 0px;
+        opacity: 0.9;
+        padding: 0px;
+        margin-right: 50px;
+      }
+    </style>
 </head>
 <body>
     <header class="navbar">
@@ -18,8 +35,8 @@
             <ul>
               <li><a href="/listings">Home</a></li>
               <li><a href="/listings/new">Add New Listing</a></li>
-              <li><a href="/about">About</a></li>
-              <li><a href="/contact">Contact</a></li>
+              <li><button onclick="window.scrollTo(0,5000)" id="btn">About</a></li>
+              <li><button  onclick="window.scrollTo(0,5000)" id="btn_contact">Contact</a></li>
             </ul>
           </nav>
           <div class="auth-buttons">
