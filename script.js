@@ -11,14 +11,26 @@ const ListingsRoute = require("./routes/listing.js");
 const ReviewRoute = require("./routes/reviews.js");
 const UserRoute = require("./routes/user.js");
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('./models/User.js');
 
+const store = MongoStore.create({
+    mongoUrl : process.env.MONGO_URL,
+    crypto : {
+        secret : process.env.SECRET_KEY,
+    },
+    touchAfter : 24 * 3600,
+});
+store.on("error",()=>{
+    throw new ExpressError(401,"mongo session threw a error");
+})
 // Session configuration
 const sessionOptions = {
-    secret: "mysecretekey",
+    store : store,
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: true, // Fixed typo
     cookie: {
