@@ -49,7 +49,7 @@ passport.deserializeUser(User.deserializeUser()); // Fixed typo
 
 // Database Connection
 async function main() {
-    const MONGO_URL = 'mongodb://127.0.0.1:27017/wander_lust';
+    const MONGO_URL = process.env.MONGO_URL;
     await mongoose.connect(MONGO_URL);
 }
 main()
