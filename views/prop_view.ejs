@@ -15,17 +15,42 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+    <style>
+      #map {
+      position: relative; /* Changed from absolute */
+      width: 40%; /* Adjust width as needed */
+      height: 400px; /* Ensure the map has a fixed height */
+      margin-top: 20px; /* Adds spacing */
+      border-radius: 10px; /* Optional: rounded corners */
+    }
+    .map-box{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 100vw;
+    }
+    .review_box{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+    }
+    </style>
     <style>
       .star-rating {
         direction: rtl;
         display: inline-block;
         padding: 20px;
       }
-      
+
       .star-rating input[type="radio"] {
         display: none;
       }
-      
+
       .star-rating label {
         color: #bbb;
         font-size: 2rem;
@@ -33,13 +58,13 @@
         cursor: pointer;
         transition: all 0.3s ease;
       }
-      
+
       .star-rating label:hover,
       .star-rating label:hover ~ label,
       .star-rating input[type="radio"]:checked ~ label {
         color: #ffb700;
       }
-      
+
       .rating-value {
         font-size: 1.5rem;
         font-weight: bold;
@@ -74,18 +99,15 @@
     <div class="container mt-4">
       <div class="row">
         <div class="col-md-6">
-          <img
-            src=<%= obj.image.URL %>
-            class="img-fluid rounded shadow"
-            alt="<%= obj.title %>"
-          />
+          <img src="<%=obj.image.URL%>" class="img-fluid rounded shadow" alt="<%= obj.title %>" />
         </div>
 
         <div class="col-md-6">
           <h1 class="fw-bold"><%= obj.title %></h1>
           <p><strong>Owned By:</strong> <%= obj.owner.username %></p>
           <p class="text-muted">
-            <i class="fas fa-map-marker-alt"></i> <%= obj.location %>, <%= obj.country %>
+            <i class="fas fa-map-marker-alt"></i> <%= obj.location %>, <%=
+            obj.country %>
           </p>
           <h3 class="text-success">
             $<%= obj.price %> <span class="fs-6 text-muted">/ night</span>
@@ -95,10 +117,18 @@
 
           <h3 class="mt-4">What this place offers</h3>
           <ul class="list-group">
-            <li class="list-group-item"><i class="fas fa-wifi me-2"></i> Wifi</li>
-            <li class="list-group-item"><i class="fas fa-parking me-2"></i> Free parking</li>
-            <li class="list-group-item"><i class="fas fa-swimming-pool me-2"></i> Pool</li>
-            <li class="list-group-item"><i class="fas fa-temperature-low me-2"></i> Air conditioning</li>
+            <li class="list-group-item">
+              <i class="fas fa-wifi me-2"></i> Wifi
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-parking me-2"></i> Free parking
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-swimming-pool me-2"></i> Pool
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-temperature-low me-2"></i> Air conditioning
+            </li>
           </ul>
 
           <% if (!user_id || obj.owner._id == user_id) { %>
@@ -169,64 +199,88 @@
 
     <!-- Reviews Section -->
     <div class="container mt-4">
-      <h2>Reviews</h2>
-<div class="list-group">
-  <% 
-    let userReview = obj.reviews.find(review => review.owner._id == user_id);
-    let otherReviews = obj.reviews.filter(review => review.owner._id != user_id);
-  %>
-
-  <% if (userReview) { %>
-    <!-- Logged-in user's review at the top -->
-    <div class="list-group-item d-flex justify-content-between align-items-center border border-primary">
-      <div>
-        <p class="mb-1"><strong>Your Review:</strong> <%= userReview.comment %></p>
-        <p class="mb-1"><strong>Owner:</strong> <%= userReview.owner.username %></p>
-        <p class="mb-1">
-          <strong>Rating:</strong> 
-          <% for (let i = 0; i < 5; i++) { %>
-            <i class="fas fa-star <%= i < userReview.rating ? 'text-warning' : 'text-secondary' %>"></i>
-          <% } %>
-          <%= userReview.rating %> / 5
-        </p>
-        <small class="text-muted">Posted on <%= new Date(userReview.createdAt).toLocaleDateString() %></small>
+      <div class="review_box">
+        <h2>Reviews</h2>
       </div>
-      <form action="/listings/<%= obj.id %>/review/<%= userReview.id %>?_method=DELETE" method="POST">
-        <button class="btn btn-sm btn-danger">
-          <i class="fas fa-trash"></i> Delete
-        </button>
-      </form>
-    </div>
-  <% } %>
+      <div class="list-group">
+        <% let userReview = obj.reviews.find(review => review.owner._id ==
+        user_id); let otherReviews = obj.reviews.filter(review =>
+        review.owner._id != user_id); %> <% if (userReview) { %>
+        <!-- Logged-in user's review at the top -->
+        <div
+          class="list-group-item d-flex justify-content-between align-items-center border border-primary"
+        >
+          <div>
+            <p class="mb-1">
+              <strong>Your Review:</strong> <%= userReview.comment %>
+            </p>
+            <p class="mb-1">
+              <strong>Owner:</strong> <%= userReview.owner.username %>
+            </p>
+            <p class="mb-1">
+              <strong>Rating:</strong>
+              <% for (let i = 0; i < 5; i++) { %>
+              <i
+                class="fas fa-star <%= i < userReview.rating ? 'text-warning' : 'text-secondary' %>"
+              ></i>
+              <% } %> <%= userReview.rating %> / 5
+            </p>
+            <small class="text-muted"
+              >Posted on <%= new Date(userReview.createdAt).toLocaleDateString()
+              %></small
+            >
+          </div>
+          <form
+            action="/listings/<%= obj.id %>/review/<%= userReview.id %>?_method=DELETE"
+            method="POST"
+          >
+            <button class="btn btn-sm btn-danger">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </form>
+        </div>
+        <% } %>
 
-  <!-- Display other reviews below -->
-  <% otherReviews.forEach(review => { %>
-    <div class="list-group-item d-flex justify-content-between align-items-center">
-      <div>
-        <p class="mb-1"><strong>Comment:</strong> <%= review.comment %></p>
-        <p class="mb-1"><strong>Owner:</strong> <%= review.owner.username %></p>
-        <p class="mb-1">
-          <strong>Rating:</strong> 
-          <% for (let i = 0; i < 5; i++) { %>
-            <i class="fas fa-star <%= i < review.rating ? 'text-warning' : 'text-secondary' %>"></i>
+        <!-- Display other reviews below -->
+        <% otherReviews.forEach(review => { %>
+        <div
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <p class="mb-1"><strong>Comment:</strong> <%= review.comment %></p>
+            <p class="mb-1">
+              <strong>Owner:</strong> <%= review.owner.username %>
+            </p>
+            <p class="mb-1">
+              <strong>Rating:</strong>
+              <% for (let i = 0; i < 5; i++) { %>
+              <i
+                class="fas fa-star <%= i < review.rating ? 'text-warning' : 'text-secondary' %>"
+              ></i>
+              <% } %> <%= review.rating %> / 5
+            </p>
+            <small class="text-muted"
+              >Posted on <%= new Date(review.createdAt).toLocaleDateString()
+              %></small
+            >
+          </div>
+          <% if (review.owner._id == user_id || user_id == obj.owner._id) { %>
+          <form
+            action="/listings/<%= obj.id %>/review/<%= review.id %>?_method=DELETE"
+            method="POST"
+          >
+            <button class="btn btn-sm btn-danger">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </form>
           <% } %>
-          <%= review.rating %> / 5
-        </p>
-        <small class="text-muted">Posted on <%= new Date(review.createdAt).toLocaleDateString() %></small>
+        </div>
+        <% }) %>
       </div>
-      <% if (review.owner._id == user_id || user_id == obj.owner._id) { %>
-      <form action="/listings/<%= obj.id %>/review/<%= review.id %>?_method=DELETE" method="POST">
-        <button class="btn btn-sm btn-danger">
-          <i class="fas fa-trash"></i> Delete
-        </button>
-      </form>
-      <% } %>
     </div>
-  <% }) %>
-</div>
-
+    <div class="map-box">
+      <div id="map"></div>
     </div>
-
     <%- include('footer') %>
 
     <!-- Bootstrap JS -->
@@ -235,11 +289,13 @@
     <!-- JavaScript for Star Rating -->
     <script>
       // Star rating functionality
-      const starInputs = document.querySelectorAll('.star-rating input[type="radio"]');
-      const ratingDisplay = document.getElementById('rating_display');
-      
-      starInputs.forEach(input => {
-        input.addEventListener('change', function() {
+      const starInputs = document.querySelectorAll(
+        '.star-rating input[type="radio"]'
+      );
+      const ratingDisplay = document.getElementById("rating_display");
+
+      starInputs.forEach((input) => {
+        input.addEventListener("change", function () {
           ratingDisplay.textContent = `Your Rating: ${this.value} / 5`;
         });
       });
@@ -250,7 +306,39 @@
           msg.remove();
         });
       }, 3000);
-    </script>
+
+      const accessToken = "pk.eyJ1Ijoic2VoZXozMDEwIiwiYSI6ImNtODVtZTJ4dDFuYmIybHFybHJucGFrMGQifQ.6Gea9Xt6S69lXN8AdQrhjQ";
+mapboxgl.accessToken = accessToken;
+
+// Rename 'location' to avoid conflicts
+const placeName = "<%= obj.location %>"; 
+
+fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(placeName)}.json?access_token=${accessToken}`)
+  .then(response => response.json())
+  .then(data => {
+    if (data.features.length === 0) {
+      console.error("Location not found!");
+      return;
+    }
+
+    const coordinates = data.features[0].center; // [longitude, latitude]
+    console.log("Coordinates:", coordinates);
+
+    // Initialize the map
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: coordinates,
+      zoom: 9
+    });
+
+    // Add a marker at the location
+    new mapboxgl.Marker()
+      .setLngLat(coordinates)
+      .addTo(map);
+  })
+  .catch(error => console.error("Error fetching geocode:", error));
+</script>
     <script src="/js/validate.js"></script>
   </body>
 </html>
